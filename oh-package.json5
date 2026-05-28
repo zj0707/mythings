@@ -1,0 +1,7 @@
+{
+  "modelVersion": "5.0.0",
+  "name": "StudyManager",
+  "version": "1.0.0",
+  "description": "智能学习管理助手",
+  "dependencies": {}
+}

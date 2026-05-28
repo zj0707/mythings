@@ -1,0 +1,8 @@
+node_modules/
+.idea/
+build/
+.cxx/
+.arkui-x/
+*.iml
+.DS_Store
+local.properties

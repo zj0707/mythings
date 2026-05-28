@@ -1,0 +1,28 @@
+{
+  "string": [
+    {
+      "name": "app_name",
+      "value": "Study Manager"
+    },
+    {
+      "name": "module_desc",
+      "value": "Study Manager - 智能学习管理助手"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "Study Manager 主入口"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "Study Manager"
+    },
+    {
+      "name": "internet_permission_reason",
+      "value": "用于在线课程识别和语音服务"
+    },
+    {
+      "name": "notification_permission_reason",
+      "value": "用于发送学习提醒通知"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "HVIGOR": {
+    "IS_INCREMENTAL": true,
+    "IS_DAEMON": true,
+    "IS_PARALLEL": true,
+    "IS_HVIGORFILE_TYPE_CHECK": false,
+    "TASK_TIME": {},
+    "APIS": [],
+    "CONFIG_EXPERIMENT": {
+      "ENABLE_MODULE_SKIP": false,
+      "ENABLE_CPP_FUNCTION_LEVEL_INCREMENTAL": false
+    },
+    "CONFIG_PROPERTIES": {},
+    "BUILD_ID": "202605292031330930",
+    "ERROR_MESSAGE": [
+      {
+        "CODE": "00303217",
+        "MESSAGE": "Invalid value of '%s' in the system environment path.",
+        "SOLUTIONS": [
+          "Correct the value, run hvigorw --stop-daemon to stop the daemon process, and then try again."
+        ],
+        "TIMESTAMP": "1780057894931"
+      }
+    ],
+    "TOTAL_TIME": 1841113900
+  }
+}

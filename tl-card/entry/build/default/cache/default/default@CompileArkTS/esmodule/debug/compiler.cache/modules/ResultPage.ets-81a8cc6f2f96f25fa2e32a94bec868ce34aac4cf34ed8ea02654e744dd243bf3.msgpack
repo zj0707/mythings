@@ -1,0 +1,584 @@
+Ôr@Ÿªassertions¤code´customTransformCache¬dependencies¢id¤meta±moduleSideEffects¬originalCode±originalSourcemap«resolvedIds®sourcemapChainµsyntheticNamedExportsµtransformDependencies®transformFiles¨cacheAstÔrAÚ1'if (!("finalizeConstruction" in ViewPU.prototype)) {
+    Reflect.set(ViewPU.prototype, "finalizeConstruction", () => { });
+}
+import router from "@ohos.router";
+import { tarotController } from '../controller/TarotController';
+class DisplayCard {
+    constructor() {
+        this.cardName = '';
+        this.nameEn = '';
+        this.position = '';
+        this.orientation = '';
+        this.interpretation = '';
+        this.keywords = '';
+        this.element = '';
+        this.isReversed = false;
+    }
+}
+class ResultPage extends ViewPU {
+    constructor(parent, params, __localStorage, elmtId = -1, paramsLambda = undefined, extraInfo) {
+        super(parent, __localStorage, elmtId, extraInfo);
+        if (typeof paramsLambda === "function") {
+            this.paramsGenerator_ = paramsLambda;
+        }
+        this.__cards = new ObservedPropertyObjectPU([], this, "cards");
+        this.__selectedIndex = new ObservedPropertySimplePU(0, this, "selectedIndex");
+        this.setInitiallyProvidedValue(params);
+        this.finalizeConstruction();
+    }
+    setInitiallyProvidedValue(params) {
+        if (params.cards !== undefined) {
+            this.cards = params.cards;
+        }
+        if (params.selectedIndex !== undefined) {
+            this.selectedIndex = params.selectedIndex;
+        }
+    }
+    updateStateVars(params) {
+    }
+    purgeVariableDependenciesOnElmtId(rmElmtId) {
+        this.__cards.purgeDependencyOnElmtId(rmElmtId);
+        this.__selectedIndex.purgeDependencyOnElmtId(rmElmtId);
+    }
+    aboutToBeDeleted() {
+        this.__cards.aboutToBeDeleted();
+        this.__selectedIndex.aboutToBeDeleted();
+        SubscriberManager.Get().delete(this.id__());
+        this.aboutToBeDeletedInternal();
+    }
+    get cards() {
+        return this.__cards.get();
+    }
+    set cards(newValue) {
+        this.__cards.set(newValue);
+    }
+    get selectedIndex() {
+        return this.__selectedIndex.get();
+    }
+    set selectedIndex(newValue) {
+        this.__selectedIndex.set(newValue);
+    }
+    aboutToAppear() {
+        const arr = tarotController.lastDrawResults;
+        if (arr.length === 0) {
+            router.back();
+            return;
+        }
+        const list = [];
+        for (let i = 0; i < arr.length; i++) {
+            const d = new DisplayCard();
+            d.cardName = arr[i].card.name;
+            d.nameEn = arr[i].card.nameEn;
+            d.position = arr[i].position;
+            d.orientation = arr[i].getOrientation();
+            d.interpretation = arr[i].getInterpretation();
+            d.keywords = arr[i].card.keywords;
+            d.element = arr[i].card.element;
+            d.isReversed = arr[i].isReversed;
+            list.push(d);
+        }
+        this.cards = list;
+    }
+    initialRender() {
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Column.create();
+            Column.width('100%');
+            Column.height('100%');
+            Column.backgroundColor('#1A0A2E');
+        }, Column);
+        this.TitleBar.bind(this)();
+        this.CardTabs.bind(this)();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Scroll.create();
+            Scroll.layoutWeight(1);
+        }, Scroll);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Column.create();
+            Column.padding(20);
+        }, Column);
+        this.InterpretationContent.bind(this)();
+        Column.pop();
+        Scroll.pop();
+        Column.pop();
+    }
+    TitleBar(parent = null) {
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Row.create();
+            Row.width('100%');
+            Row.height(56);
+            Row.padding({ left: 16, right: 16 });
+            Row.backgroundColor('#2D1B4E');
+        }, Row);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Button.createWithLabel('â† è¿”å›');
+            Button.fontSize(14);
+            Button.type(ButtonType.Capsule);
+            Button.backgroundColor('#3A2560');
+            Button.fontColor('#C8B8E0');
+            Button.onClick(() => { router.back(); });
+        }, Button);
+        Button.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Blank.create();
+        }, Blank);
+        Blank.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create('ç‰Œé¢è§£è¯»');
+            Text.fontSize(18);
+            Text.fontWeight(FontWeight.Bold);
+            Text.fontColor('#E8D5B7');
+            Text.letterSpacing(4);
+        }, Text);
+        Text.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Blank.create();
+        }, Blank);
+        Blank.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create('');
+            Text.width(60);
+        }, Text);
+        Text.pop();
+        Row.pop();
+    }
+    CardTabs(parent = null) {
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Row.create();
+            Row.width('100%');
+            Row.backgroundColor('#2D1B4E');
+        }, Row);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            ForEach.create();
+            const forEachItemGenFunction = (_item, idx) => {
+                const c = _item;
+                this.observeComponentCreation2((elmtId, isInitialRender) => {
+                    Column.create();
+                    Column.padding({ top: 8, bottom: 8 });
+                    Column.layoutWeight(1);
+                    Column.border({ width: { bottom: this.selectedIndex === idx ? 2 : 0 }, color: '#D4AF37' });
+                    Column.onClick(() => { this.selectedIndex = idx; });
+                }, Column);
+                this.observeComponentCreation2((elmtId, isInitialRender) => {
+                    Text.create(c.cardName);
+                    Text.fontSize(15);
+                    Text.fontWeight(this.selectedIndex === idx ? FontWeight.Bold : FontWeight.Normal);
+                    Text.fontColor(this.selectedIndex === idx ? '#D4AF37' : '#8B7BB0');
+                    Text.maxLines(1);
+                }, Text);
+                Text.pop();
+                this.observeComponentCreation2((elmtId, isInitialRender) => {
+                    Text.create(c.position);
+                    Text.fontSize(11);
+                    Text.fontColor(this.selectedIndex === idx ? '#E8D5B7' : '#6B5B90');
+                    Text.margin({ top: 4 });
+                }, Text);
+                Text.pop();
+                Column.pop();
+            };
+            this.forEachUpdateFunction(elmtId, this.cards, forEachItemGenFunction, (c, idx) => idx.toString(), true, true);
+        }, ForEach);
+        ForEach.pop();
+        Row.pop();
+    }
+    InterpretationContent(parent = null) {
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Column.create();
+            Column.width('100%');
+        }, Column);
+        this.OrientationRow.bind(this)();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create(this.cards[this.selectedIndex].cardName);
+            Text.fontSize(32);
+            Text.fontWeight(FontWeight.Bold);
+            Text.fontColor('#E8D5B7');
+            Text.margin({ bottom: 4 });
+        }, Text);
+        Text.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create(this.cards[this.selectedIndex].nameEn);
+            Text.fontSize(14);
+            Text.fontColor('#9B8EC0');
+            Text.margin({ bottom: 20 });
+            Text.letterSpacing(2);
+        }, Text);
+        Text.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create('å…³é”®è¯');
+            Text.fontSize(14);
+            Text.fontWeight(FontWeight.Bold);
+            Text.fontColor('#D4AF37');
+            Text.margin({ bottom: 8 });
+        }, Text);
+        Text.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create(this.cards[this.selectedIndex].keywords);
+            Text.fontSize(15);
+            Text.fontColor('#C8B8E0');
+            Text.lineHeight(22);
+            Text.margin({ bottom: 24 });
+        }, Text);
+        Text.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create('è¯¦ç»†è§£è¯»');
+            Text.fontSize(14);
+            Text.fontWeight(FontWeight.Bold);
+            Text.fontColor('#D4AF37');
+            Text.margin({ bottom: 8 });
+        }, Text);
+        Text.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create(this.cards[this.selectedIndex].interpretation);
+            Text.fontSize(14);
+            Text.fontColor('#C8B8E0');
+            Text.lineHeight(24);
+            Text.letterSpacing(1);
+        }, Text);
+        Text.pop();
+        this.WisdomBox.bind(this)();
+        Column.pop();
+    }
+    OrientationRow(parent = null) {
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Row.create();
+            Row.width('100%');
+            Row.margin({ bottom: 16 });
+        }, Row);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create(this.cards[this.selectedIndex].isReversed ? 'é€†ä½ â–½' : 'æ­£ä½ â–³');
+            Text.fontSize(14);
+            Text.fontColor(this.cards[this.selectedIndex].isReversed ? '#FF6B6B' : '#D4AF37');
+            Text.backgroundColor(this.cards[this.selectedIndex].isReversed ? '#FF6B6B20' : '#D4AF3720');
+            Text.borderRadius(8);
+            Text.padding({ left: 12, right: 12, top: 4, bottom: 4 });
+        }, Text);
+        Text.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Blank.create();
+        }, Blank);
+        Blank.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create(this.cards[this.selectedIndex].element + 'å…ƒç´ ');
+            Text.fontSize(12);
+            Text.fontColor('#9B8EC0');
+            Text.backgroundColor('#3A2560');
+            Text.borderRadius(8);
+            Text.padding({ left: 10, right: 10, top: 4, bottom: 4 });
+        }, Text);
+        Text.pop();
+        Row.pop();
+    }
+    WisdomBox(parent = null) {
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Column.create();
+            Column.width('100%');
+            Column.backgroundColor('#2D1B4E');
+            Column.borderRadius(14);
+            Column.padding(18);
+            Column.margin({ top: 24 });
+        }, Column);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create('å¡”ç½—å¯ç¤º');
+            Text.fontSize(13);
+            Text.fontWeight(FontWeight.Bold);
+            Text.fontColor('#D4AF37');
+            Text.margin({ bottom: 8 });
+        }, Text);
+        Text.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create(this.getWisdom(this.cards[this.selectedIndex]));
+            Text.fontSize(13);
+            Text.fontColor('#B8A0D0');
+            Text.lineHeight(22);
+            Text.fontStyle(FontStyle.Italic);
+        }, Text);
+        Text.pop();
+        Column.pop();
+    }
+    getWisdom(c) {
+        const advices = [
+            'ç›¸ä¿¡ä½ çš„ç›´è§‰ï¼Œå®ƒæ­£åœ¨æŒ‡å¼•ä½ èµ°å‘æ­£ç¡®çš„æ–¹å‘ã€‚',
+            'æ­¤åˆ»çš„å›°æƒ‘æ˜¯æˆé•¿çš„å¿…ç»ä¹‹è·¯ï¼Œæ¥çº³å®ƒï¼Œç­”æ¡ˆè‡ªä¼šæµ®ç°ã€‚',
+            'æ”¹å˜æ­£åœ¨å‘ç”Ÿï¼Œæ”¾ä¸‹å¯¹æ§åˆ¶çš„æ‰§å¿µï¼Œæ‹¥æŠ±æœªçŸ¥ã€‚',
+            'ä½ å†…å¿ƒæ—©å·²çŸ¥é“ç­”æ¡ˆï¼Œç°åœ¨éœ€è¦çš„åªæ˜¯è¡ŒåŠ¨çš„å‹‡æ°”ã€‚'
+        ];
+        const idx = (c.cardName.length + (c.isReversed ? 1 : 0)) % advices.length;
+        return advices[idx];
+    }
+    rerender() {
+        this.updateDirtyElements();
+    }
+    static getEntryName() {
+        return "ResultPage";
+    }
+}
+registerNamedRoute(() => new ResultPage(undefined, {}), "", { bundleName: "com.tlcard.app", moduleName: "entry", pagePath: "pages/ResultPage", pageFullPath: "entry/src/main/ets/pages/ResultPage", integratedHsp: "false", moduleType: "followWithHap" });
+//# sourceMappingURL=ResultPage.js.mapÂ’Ùf hvigor_ignore_C:_Program Files_Huawei_DevEco Studio_sdk_default_openharmony_ets_api_@ohos.router.d.tsÙAC:\1234\tl-card\entry\src\main\ets\controller\TarotController.etsÙ7C:\1234\tl-card\entry\src\main\ets\pages\ResultPage.etsÔrB›ªmoduleName±isLocalDependency¯isNodeEntryFile§pkgPath±belongProjectPath§pkgNameªpkgVersion±dependencyPkgInfo°belongModulePath§checker¬shouldEmitJs¥entryÃÂµC:\1234\tl-card\entry¯C:\1234\tl-card¥entry¥1.0.0Ô  µC:\1234\tl-card\entryÔrCÜ ®¬getNodeCount²getIdentifierCount®getSymbolCount¬getTypeCountµgetInstantiationCountµgetRelationCacheSizes±isUndefinedSymbol±isArgumentsSymbol¯isUnknownSymbol¯getMergedSymbol®getDiagnostics´getGlobalDiagnostics´getRecursionIdentity¶getUnmatchedProperties¹getTypeOfSymbolAtLocation¯getTypeOfSymbolÙ(getSymbolsOfParameterPropertyDeclaration·getDeclaredTypeOfSymbol³getPropertiesOfType±getPropertyOfTypeÙ"getPrivateIdentifierPropertyOfType·getTypeOfPropertyOfType²getIndexInfoOfType³getIndexInfosOfTypeºgetIndexInfosOfIndexSymbol³getSignaturesOfType²getIndexTypeOfType¬getIndexType¬getBaseTypes¸getBaseTypeOfLiteralType®getWidenedType³getTypeFromTypeNode°getParameterTypeÙ$getParameterIdentifierNameAtPosition¸getPromisedTypeOfPromise®getAwaitedType¸getReturnTypeOfSignature®isNullableType¯getNullableType²getNonNullableType²getNonOptionalType°getTypeArguments®typeToTypeNodeÙ$indexInfoToIndexSignatureDeclaration¿signatureToSignatureDeclaration²symbolToEntityName²symbolToExpression¬symbolToNodeÙ!symbolToTypeParameterDeclarations¼symbolToParameterDeclarationºtypeParameterToDeclaration±getSymbolsInScope³getSymbolAtLocation·getIndexInfosAtLocationÙ!getShorthandAssignmentValueSymbolÙ#getExportSpecifierLocalTargetSymbol·getExportSymbolOfSymbol±getTypeAtLocationºgetTypeAtLocationForLinterÙ tryGetTypeAtLocationWithoutCheckºgetTypeOfAssignmentPatternÙ*getPropertySymbolOfDestructuringAssignment±signatureToString¬typeToString®symbolToStringµtypePredicateToString®writeSignature©writeType«writeSymbol²writeTypePredicate¼getAugmentedPropertiesOfType®getRootSymbols²getSymbolOfExpando±getContextualTypeÙ(getContextualTypeForObjectLiteralElementÙ#getContextualTypeForArgumentAtIndexÙ getContextualTypeForJsxAttribute²isContextSensitiveÙ!getTypeOfPropertyOfContextualTypeµgetFullyQualifiedNameÙ#tryGetResolvedSignatureWithoutCheck´getResolvedSignatureÙ/getResolvedSignatureForStringLiteralCompletionsÙ$getResolvedSignatureForSignatureHelpµgetExpandedParameters¹hasEffectiveRestParameterºcontainsArgumentsReference°getConstantValueµisValidPropertyAccessÙ#isValidPropertyAccessForCompletions»getSignatureFromDeclarationºisImplementationOfOverload¹getImmediateAliasedSymbol°getAliasedSymbol¯getEmitResolver²getExportsOfModule¿getExportsAndPropertiesOfModuleÙ forEachExportAndPropertyOfModule¯getSymbolWalker±getAmbientModules¹getJsxIntrinsicTagNamesAt³isOptionalParameter»tryGetMemberInModuleExportsÙ(tryGetMemberInModuleExportsAndProperties´tryFindAmbientModuleÙ(tryFindAmbientModuleWithoutAugmentations¯getApparentType¬getUnionType²isTypeAssignableTo³createAnonymousType¯createSignature¬createSymbol¯createIndexInfoªgetAnyType­getStringType­getNumberType±createPromiseType¯createArrayType¹getElementTypeOfArrayType®getBooleanType¬getFalseType«getTrueType«getVoidType°getUndefinedType«getNullType¯getESSymbolType¬getNeverType¯getOptionalType®getPromiseType²getPromiseLikeType´getAsyncIterableType²isSymbolAccessible«isArrayType«isTupleType¯isArrayLikeTypeÙ#isTypeInvalidDueToUnionDiscriminantºgetExactOptionalProperties¿getAllPossiblePropertiesOfTypesÙ(getSuggestedSymbolForNonexistentPropertyÙ#getSuggestionForNonexistentPropertyÙ,getSuggestedSymbolForNonexistentJSXAttributeÙ&getSuggestedSymbolForNonexistentSymbolÙ!getSuggestionForNonexistentSymbolÙ&getSuggestedSymbolForNonexistentModuleÙ!getSuggestionForNonexistentExportÙ+getSuggestedSymbolForNonexistentClassMember·getBaseConstraintOfType»getDefaultFromTypeParameter«resolveName¯getJsxNamespaceµgetJsxFragmentFactory¸getAccessibleSymbolChain»getTypePredicateOfSignature¹resolveExternalModuleName»resolveExternalModuleSymbol°tryGetThisTypeAt¹getTypeArgumentConstraint¸getSuggestionDiagnostics¸runWithCancellationTokenÙ3getLocalTypeParametersOfClassOrInterfaceOrTypeAlias´isDeclarationVisible´isPropertyAccessible»getTypeOnlyAliasDeclaration¿getMemberOverrideModifierStatusÙ!isTypeParameterPossiblyReferenced²getConstEnumRelate´clearConstEnumRelateµdeleteConstEnumRelateÙ$getTypeArgumentsForResolvedSignatureµgetCheckedSourceFilesÙ"collectHaveTsNoCheckFilesForLinter·clearQualifiedNameCache®isStaticRecord²isStaticSourceFileÔ  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  ÃÃÚimport { router } from '@kit.ArkUI';
+import { tarotController, DrawResult } from '../controller/TarotController';
+
+class DisplayCard {
+  cardName: string = '';
+  nameEn: string = '';
+  position: string = '';
+  orientation: string = '';
+  interpretation: string = '';
+  keywords: string = '';
+  element: string = '';
+  isReversed: boolean = false;
+}
+
+@Entry
+@Component
+struct ResultPage {
+  @State cards: DisplayCard[] = [];
+  @State selectedIndex: number = 0;
+
+  aboutToAppear(): void {
+    const arr: DrawResult[] = tarotController.lastDrawResults;
+    if (arr.length === 0) { router.back(); return; }
+    const list: DisplayCard[] = [];
+    for (let i = 0; i < arr.length; i++) {
+      const d = new DisplayCard();
+      d.cardName = arr[i].card.name;
+      d.nameEn = arr[i].card.nameEn;
+      d.position = arr[i].position;
+      d.orientation = arr[i].getOrientation();
+      d.interpretation = arr[i].getInterpretation();
+      d.keywords = arr[i].card.keywords;
+      d.element = arr[i].card.element;
+      d.isReversed = arr[i].isReversed;
+      list.push(d);
+    }
+    this.cards = list;
+  }
+
+  build() {
+    Column() {
+      this.TitleBar()
+      this.CardTabs()
+      Scroll() {
+        Column() {
+          this.InterpretationContent()
+        }.padding(20)
+      }.layoutWeight(1)
+    }
+    .width('100%').height('100%').backgroundColor('#1A0A2E')
+  }
+
+  @Builder TitleBar() {
+    Row() {
+      Button('â† è¿”å›').fontSize(14).type(ButtonType.Capsule)
+        .backgroundColor('#3A2560').fontColor('#C8B8E0')
+        .onClick(() => { router.back() })
+      Blank()
+      Text('ç‰Œé¢è§£è¯»').fontSize(18).fontWeight(FontWeight.Bold)
+        .fontColor('#E8D5B7').letterSpacing(4)
+      Blank()
+      Text('').width(60)
+    }
+    .width('100%').height(56).padding({ left: 16, right: 16 })
+    .backgroundColor('#2D1B4E')
+  }
+
+  @Builder CardTabs() {
+    Row() {
+      ForEach(this.cards, (c: DisplayCard, idx: number) => {
+        Column() {
+          Text(c.cardName).fontSize(15)
+            .fontWeight(this.selectedIndex === idx ? FontWeight.Bold : FontWeight.Normal)
+            .fontColor(this.selectedIndex === idx ? '#D4AF37' : '#8B7BB0').maxLines(1)
+          Text(c.position).fontSize(11)
+            .fontColor(this.selectedIndex === idx ? '#E8D5B7' : '#6B5B90').margin({ top: 4 })
+        }
+        .padding({ top: 8, bottom: 8 }).layoutWeight(1)
+        .border({ width: { bottom: this.selectedIndex === idx ? 2 : 0 }, color: '#D4AF37' })
+        .onClick(() => { this.selectedIndex = idx })
+      }, (c: DisplayCard, idx: number) => idx.toString())
+    }
+    .width('100%').backgroundColor('#2D1B4E')
+  }
+
+  @Builder InterpretationContent() {
+    Column() {
+      this.OrientationRow()
+      Text(this.cards[this.selectedIndex].cardName).fontSize(32).fontWeight(FontWeight.Bold)
+        .fontColor('#E8D5B7').margin({ bottom: 4 })
+      Text(this.cards[this.selectedIndex].nameEn).fontSize(14).fontColor('#9B8EC0')
+        .margin({ bottom: 20 }).letterSpacing(2)
+
+      Text('å…³é”®è¯').fontSize(14).fontWeight(FontWeight.Bold)
+        .fontColor('#D4AF37').margin({ bottom: 8 })
+      Text(this.cards[this.selectedIndex].keywords).fontSize(15).fontColor('#C8B8E0')
+        .lineHeight(22).margin({ bottom: 24 })
+
+      Text('è¯¦ç»†è§£è¯»').fontSize(14).fontWeight(FontWeight.Bold)
+        .fontColor('#D4AF37').margin({ bottom: 8 })
+      Text(this.cards[this.selectedIndex].interpretation).fontSize(14).fontColor('#C8B8E0')
+        .lineHeight(24).letterSpacing(1)
+
+      this.WisdomBox()
+    }
+    .width('100%')
+  }
+
+  @Builder OrientationRow() {
+    Row() {
+      Text(this.cards[this.selectedIndex].isReversed ? 'é€†ä½ â–½' : 'æ­£ä½ â–³').fontSize(14)
+        .fontColor(this.cards[this.selectedIndex].isReversed ? '#FF6B6B' : '#D4AF37')
+        .backgroundColor(this.cards[this.selectedIndex].isReversed ? '#FF6B6B20' : '#D4AF3720')
+        .borderRadius(8).padding({ left: 12, right: 12, top: 4, bottom: 4 })
+      Blank()
+      Text(this.cards[this.selectedIndex].element + 'å…ƒç´ ').fontSize(12).fontColor('#9B8EC0')
+        .backgroundColor('#3A2560').borderRadius(8)
+        .padding({ left: 10, right: 10, top: 4, bottom: 4 })
+    }.width('100%').margin({ bottom: 16 })
+  }
+
+  @Builder WisdomBox() {
+    Column() {
+      Text('å¡”ç½—å¯ç¤º').fontSize(13).fontWeight(FontWeight.Bold)
+        .fontColor('#D4AF37').margin({ bottom: 8 })
+      Text(this.getWisdom(this.cards[this.selectedIndex])).fontSize(13)
+        .fontColor('#B8A0D0').lineHeight(22).fontStyle(FontStyle.Italic)
+    }
+    .width('100%').backgroundColor('#2D1B4E').borderRadius(14)
+    .padding(18).margin({ top: 24 })
+  }
+
+  private getWisdom(c: DisplayCard): string {
+    const advices: string[] = [
+      'ç›¸ä¿¡ä½ çš„ç›´è§‰ï¼Œå®ƒæ­£åœ¨æŒ‡å¼•ä½ èµ°å‘æ­£ç¡®çš„æ–¹å‘ã€‚',
+      'æ­¤åˆ»çš„å›°æƒ‘æ˜¯æˆé•¿çš„å¿…ç»ä¹‹è·¯ï¼Œæ¥çº³å®ƒï¼Œç­”æ¡ˆè‡ªä¼šæµ®ç°ã€‚',
+      'æ”¹å˜æ­£åœ¨å‘ç”Ÿï¼Œæ”¾ä¸‹å¯¹æ§åˆ¶çš„æ‰§å¿µï¼Œæ‹¥æŠ±æœªçŸ¥ã€‚',
+      'ä½ å†…å¿ƒæ—©å·²çŸ¥é“ç­”æ¡ˆï¼Œç°åœ¨éœ€è¦çš„åªæ˜¯è¡ŒåŠ¨çš„å‹‡æ°”ã€‚'
+    ];
+    const idx = (c.cardName.length + (c.isReversed ? 1 : 0)) % advices.length;
+    return advices[idx];
+  }
+}
+ÀÔrD’¬@ohos.router½../controller/TarotControllerÔrE—ªassertions¨external¢id¤meta±moduleSideEffectsªresolvedByµsyntheticNamedExportsAÃÙf hvigor_ignore_C:_Program Files_Huawei_DevEco Studio_sdk_default_openharmony_ets_api_@ohos.router.d.tsÔrF‘¯hostModulesInfo’ÔrG’²hostDependencyName®hostModuleName¬@ohos.router¥entryG¬@ohos.router¥entryÃªoh-resolveÂEAÂÙAC:\1234\tl-card\entry\src\main\ets\controller\TarotController.etsAÃªoh-resolveÂ“ÔrH–§version¤fileªsourceRoot§sources¥names¨mappings­ResultPage.js ‘®ResultPage.etsÜ2–”    ”  	”  ”  ”!  #”"  $˜”   ” ”	 	” ” &”  ,”? ÌK”Ì@ ÌL“”   ” ” ‘”  •” ” 
+” ” ” •” ” ” ” ” •” ” 
+” ” ” •” ” ” ” ” •” ” ” ”  ”! •” 	” 	
+” 	” 	” 	•” 
+” 
+	” 
+” 
+” 
+•” ” ” ” ”  ’”  ” ‘” ’” ” ‘”  ’”4  ”6 "’”< !”= "‘” ’” 	” ’” 	” ’” 	” ’” 	” ’” ” ˜” ” 
+” ” ”# -”$ .”3 =”4 >˜” ” ” ” ” ” ” ” –” ” "” #” '” )” *’” +” 2‘”	 4–” ” 
+” ”  ” "” #Ü ” ” 	” ” ” ” ” ” ” ” ”  ”& "”( $”) %”+ '”- )˜” ” ” ” ” ”% ”' !”( "” ” ” ” ” ” ” ” ” ”  ”$ ”% ”) #”* $” ” ” ” ” ” ” ” ” ” ”" ”# ”) #”* $œ” ” ” ” ” ” ” ” ” ”  ”( "”) #” ” ” ” ” ” ”  ”! ”" ”# ”1 +”3 -”4 .” ” ” ” ” ”" ”# ”$ ”% ”&  ”7 1”9 3”: 4” ” ” ” ” ” ” ” ” ”  ”$ ”% ”- '”. (”  ”  ”  ”  ”  ”  ”  ”  ”  ”  ”#  ”$  ”+  %”,  &œ” !” !” !” !” !” !” !”  !”! !”" !”, !&”- !'˜” "” "
+” "” "” "” "” "” "‘”	 #—” $” $” $	” $” $” $” $’” %” %‘” '’” (” (
+–” (” (
+” 1” 1
+” 1” 1–” (” (
+” 1” 1” 1”  1 –” (” (
+” 1"”" 11”# 12”, 1;•” )” )
+” )” )”" )•” *” *
+” *” *”" *’” +” +–” +” +” /” /”  /”! /’” ,” ,–” ,” ,” .
+” .” .” .•” -
+” -” -”" -$”/ -&’” ,” ,’” +” +’” (” (
+‘” 2’” 4” 4’” 5” 5–” 5” 5” ?” ?
+” ?” ?–” 5” 5” ?” ?” ?” ?” 5” 5” ?” ?%” ?&” ?(” ?,”  ?.”" ?0”$ ?2”) ?7”+ ?9”- ?;”/ ?=–” 5” 5” Ì@” Ì@”  Ì@”) Ì@”” 6” 6”# 6”) 6–” 6” 6” 6” 6” 6” 6 ˜” 6” 6” 6"” 6&” 6'”" 61”# 62”* 69–” 6” 6” 7	”" 7”# 7”, 7"–” 6” 6” 7$” 7-” 7.”& 77Ÿ” 6” 6” 8	” 8” 8” 8”  8”# 8”) 8”* 8 ”. 8$”0 8&”1 8&”2 8'”3 8(’” 6” 6’” 9” 9’” 9” 9”” :” :
+” :” :–” :” :
+” :” :” :” :˜” :” :
+” : ” :*” :+”& :5”' :6”+ ::–” :” :
+” ;	” ;” ;”$ ;–” :” :
+” ;” ;+” ;,”  ;-’” :” :
+’” <” <’” <” <”” =” =
+” =” =–” =” =
+” =” =” =” =’” =” =
+’” 5” 5‘” ÌA’” ÌC” ÌC’” ÌD” ÌD–” ÌD” ÌD” ÌR” ÌR
+” ÌR” ÌR–” ÌD” ÌD” ÌR” ÌR"”  ÌR#”) ÌR,’” ÌE” ÌE’”3 ÌE+”6 ÌE6’” ÌF” ÌF” ÌF” ÌF” ÌM	”" ÌM”# ÌM”% ÌM”( ÌM”* ÌM”+ ÌM”- ÌM”3 ÌM!”5 ÌM#”6 ÌM$”8 ÌM&–” ÌF” ÌF” ÌM(”' ÌM4”( ÌM5”) ÌM6Ü ” ÌF” ÌF” ÌN	”! ÌN”" ÌN”$ ÌN”) ÌN”+ ÌN”- ÌN”3 ÌN!”5 ÌN#”9 ÌN'”: ÌN(”ÌG ÌN5”ÌL ÌN:”ÌO ÌN=”ÌP ÌN>”ÌQ ÌN?”ÌR ÌNÌ@”ÌS ÌNÌA”ÌT ÌNÌB”ÌU ÌNÌC”ÌV ÌNÌD”ÌW ÌNÌE”ÌY ÌNÌG”Ì[ ÌNÌI”Ì` ÌNÌN”Ìb ÌNÌP”Ìk ÌNÌY”Ìm ÌNÌ[Ü ” ÌF” ÌF” ÌO	”" ÌO”# ÌO”& ÌO”( ÌO”+ ÌO”/ ÌO”0 ÌO”= ÌO+”Ì@ ÌO.”ÌC ÌO1”ÌD ÌO1”ÌE ÌO2”ÌF ÌO3–” ÌG
+” ÌG”  ÌG”! ÌG”" ÌG”* ÌG–” ÌG
+” ÌG” ÌG”! ÌG#”" ÌG$”$ ÌG&Ü ” ÌG
+” ÌG” ÌH”# ÌH”$ ÌH”( ÌH”) ÌH”6 ÌH*”; ÌH/”> ÌH2”? ÌH3”Ì@ ÌH4”ÌA ÌH5”ÌK ÌH?”ÌL ÌHÌ@”ÌP ÌHÌD”ÌQ ÌHÌE”ÌR ÌHÌF”ÌS ÌHÌG”Ì] ÌHÌQ”Ì^ ÌHÌR”Ìd ÌHÌXÜ ” ÌG
+” ÌG” ÌI”" ÌI”# ÌI”' ÌI”( ÌI”5 ÌI)”: ÌI.”= ÌI1”> ÌI2”? ÌI3”Ì@ ÌI4”ÌI ÌI=”ÌJ ÌI>”ÌK ÌI?”ÌL ÌIÌ@”ÌU ÌIÌI–” ÌG
+” ÌG” ÌIÌK”! ÌIÌS”" ÌIÌT”# ÌIÌU’” ÌG
+” ÌG–” ÌJ
+” ÌJ”  ÌJ”! ÌJ”" ÌJ”* ÌJ–” ÌJ
+” ÌJ” ÌJ”! ÌJ#”" ÌJ$”$ ÌJ&Ü ” ÌJ
+” ÌJ” ÌK”" ÌK”# ÌK”' ÌK”( ÌK”5 ÌK)”: ÌK.”= ÌK1”> ÌK2”? ÌK3”Ì@ ÌK4”ÌI ÌK=”ÌJ ÌK>”ÌK ÌK?”ÌL ÌKÌ@”ÌU ÌKÌIš” ÌJ
+” ÌJ” ÌKÌK” ÌKÌQ”  ÌKÌR”" ÌKÌT”% ÌKÌW”' ÌKÌY”( ÌKÌZ”* ÌKÌ\’” ÌJ
+” ÌJ’” ÌF” ÌFÜ ”/ ÌE”3 ÌE”4 ÌE”9 ÌE”ÌS ÌP	”ÌT ÌP
+”ÌU ÌP”ÌW ÌP”ÌZ ÌP%”Ì\ ÌP'”Ì^ ÌP)”Ì_ ÌP*”Ìb ÌP-”Ìc ÌP.”Ìk ÌP6”Ìm ÌP8’” ÌE” ÌE’” ÌD” ÌD‘” ÌS’” ÌU” ÌU ’” ÌV” ÌV
+–” ÌV” ÌV
+” Ìi” Ìi
+” Ìi” Ìi•” ÌW” ÌW
+” ÌW” ÌW”( ÌW” ÌX” ÌX
+” ÌX” ÌX” ÌX”" ÌX”# ÌX”' ÌX”( ÌX”5 ÌX(”6 ÌX)”7 ÌX*”? ÌX2–” ÌX” ÌX
+” ÌX4” ÌX<” ÌX=” ÌX?˜” ÌX” ÌX
+” ÌXÌA” ÌXÌK” ÌXÌL”& ÌXÌV”' ÌXÌW”+ ÌXÌ[–” ÌX” ÌX
+” ÌY	” ÌY” ÌY”$ ÌYš” ÌX” ÌX
+” ÌY” ÌY$” ÌY%” ÌY'”  ÌY-”" ÌY/”# ÌY0”% ÌY2’” ÌX” ÌX
+” ÌZ” ÌZ
+” ÌZ” ÌZ” ÌZ”" ÌZ”# ÌZ”' ÌZ”( ÌZ”5 ÌZ(”6 ÌZ)”7 ÌZ*”= ÌZ0–” ÌZ” ÌZ
+” ÌZ2” ÌZ:” ÌZ;” ÌZ=–” ÌZ” ÌZ
+” ÌZ?” ÌZÌH” ÌZÌI”$ ÌZÌRš” ÌZ” ÌZ
+” Ì[	” Ì[” Ì[” Ì[”  Ì[”" Ì[”$ Ì[”& Ì[–” ÌZ” ÌZ
+” Ì[ ” Ì[-” Ì[.”  Ì[/’” ÌZ” ÌZ
+”” Ì]” Ì]
+” Ì]” Ì]–” Ì]” Ì]
+” Ì]” Ì]” Ì]” Ì]˜” Ì]” Ì]
+” Ì]” Ì])” Ì]*”& Ì]4”' Ì]5”+ Ì]9–” Ì]” Ì]
+” Ì^	” Ì^” Ì^”$ Ì^š” Ì]” Ì]
+” Ì^” Ì^$” Ì^%” Ì^'”  Ì^-”" Ì^/”# Ì^0”% Ì^2’” Ì]” Ì]
+” Ì_” Ì_
+” Ì_” Ì_” Ì_”" Ì_”# Ì_”' Ì_”( Ì_”5 Ì_(”6 Ì_)”7 Ì_*”? Ì_2–” Ì_” Ì_
+” Ì_4” Ì_<” Ì_=” Ì_?–” Ì_” Ì_
+” Ì_ÌA” Ì_ÌJ” Ì_ÌK”$ Ì_ÌT–” Ì_” Ì_
+” Ì`	” Ì`” Ì`” Ì`š” Ì_” Ì_
+” Ì`” Ì`” Ì`” Ì`!”  Ì`'”" Ì`)”$ Ì`+”& Ì`-’” Ì_” Ì_
+”” Ìb” Ìb
+” Ìb” Ìb–” Ìb” Ìb
+” Ìb” Ìb” Ìb” Ìb˜” Ìb” Ìb
+” Ìb ” Ìb*” Ìb+”& Ìb5”' Ìb6”+ Ìb:–” Ìb” Ìb
+” Ìc	” Ìc” Ìc”$ Ìcš” Ìb” Ìb
+” Ìc” Ìc$” Ìc%” Ìc'”  Ìc-”" Ìc/”# Ìc0”% Ìc2’” Ìb” Ìb
+” Ìd” Ìd
+” Ìd” Ìd” Ìd”" Ìd”# Ìd”' Ìd”( Ìd”5 Ìd(”6 Ìd)”7 Ìd*”ÌE Ìd8–” Ìd” Ìd
+” Ìd:” ÌdÌB” ÌdÌC” ÌdÌE–” Ìd” Ìd
+” ÌdÌG” ÌdÌP” ÌdÌQ”$ ÌdÌZ–” Ìd” Ìd
+” Ìe	” Ìe” Ìe” Ìe–” Ìd” Ìd
+” Ìe” Ìe%” Ìe&”  Ìe'’” Ìd” Ìd
+•” Ìg” Ìg
+” Ìg” Ìg”# Ìg’” ÌV” ÌV
+‘” Ìj’” Ìl” Ìl’” Ìm” Ìm–” Ìm” Ìm” Ìv” Ìv” Ìv” Ìvš” Ìm” Ìm” Ìv” Ìv” Ìv” Ìv” Ìv#”! Ìv%”# Ìv'”% Ìv)Ü ” Ìn” Ìn
+” Ìn” Ìn” Ìn”" Ìn”# Ìn”' Ìn”( Ìn”5 Ìn(”6 Ìn)”7 Ìn*”ÌA Ìn4”ÌB Ìn5”ÌC Ìn6”ÌD Ìn7”ÌJ Ìn=”ÌK Ìn>”ÌL Ìn?”ÌM ÌnÌ@”ÌS ÌnÌF–” Ìn” Ìn
+” ÌnÌH” ÌnÌP” ÌnÌQ” ÌnÌSÜ ” Ìn” Ìn
+” Ìo	” Ìo” Ìo” Ìo”  Ìo”% Ìo”& Ìo”* Ìo"”+ Ìo#”8 Ìo0”9 Ìo1”: Ìo2”ÌD Ìo<”ÌE Ìo=”ÌF Ìo>”ÌG Ìo?”ÌP ÌoÌH”ÌQ ÌoÌI”ÌR ÌoÌJ”ÌS ÌoÌK”Ì\ ÌoÌTÜ ” Ìn” Ìn
+” Ìp	”  Ìp”! Ìp”% Ìp”& Ìp”+ Ìp#”, Ìp$”0 Ìp(”1 Ìp)”> Ìp6”? Ìp7”Ì@ Ìp8”ÌJ ÌpÌB”ÌK ÌpÌC”ÌL ÌpÌD”ÌM ÌpÌE”ÌX ÌpÌP”ÌY ÌpÌQ”ÌZ ÌpÌR”Ì[ ÌpÌS”Ìf ÌpÌ^–” Ìn” Ìn
+” Ìq	” Ìq” Ìq” ÌqÜ ” Ìn” Ìn
+” Ìq” Ìq ” Ìq!” Ìq#” Ìq'”! Ìq)”# Ìq+”% Ìq-”* Ìq2”, Ìq4”. Ìq6”0 Ìq8”3 Ìq;”5 Ìq=”6 Ìq>”8 ÌqÌ@”> ÌqÌF”Ì@ ÌqÌH”ÌA ÌqÌI”ÌC ÌqÌK’” Ìn” Ìn
+’” Ìr” Ìr’” Ìr” ÌrŸ” Ìs” Ìs
+” Ìs” Ìs” Ìs”" Ìs”# Ìs”' Ìs”( Ìs”5 Ìs(”6 Ìs)”7 Ìs*”> Ìs1”ÌA Ìs4”ÌE Ìs8–” Ìs” Ìs
+” Ìs:” ÌsÌB” ÌsÌC” ÌsÌE–” Ìs” Ìs
+” ÌsÌG” ÌsÌP” ÌsÌQ”$ ÌsÌZ–” Ìs” Ìs
+” Ìt	”  Ìt”! Ìt”* Ìt"–” Ìs” Ìs
+” Ìt$” Ìt0” Ìt1” Ìt2Ü ” Ìs” Ìs
+” Ìu	” Ìu” Ìu” Ìu” Ìu”! Ìu”# Ìu”% Ìu”* Ìu"”, Ìu$”. Ìu&”0 Ìu(”3 Ìu+”5 Ìu-”6 Ìu.”8 Ìu0”> Ìu6”Ì@ Ìu8”ÌA Ìu9”ÌC Ìu;’” Ìs” Ìs
+’” Ìm” Ìm‘” Ìw’” Ìy” Ìy’” Ìz” Ìz
+–” Ìz” Ìz
+” Ì€” Ì€
+” Ì€” Ì€–” Ìz” Ìz
+” Ì€”" Ì€"”# Ì€#”, Ì€,–” Ìz” Ìz
+” Ì€.” Ì€:”  Ì€;”" Ì€=–” Ìz” Ìz
+” Ì” Ì” Ì” Ìš” Ìz” Ìz
+” Ì” Ì” Ì” Ì” Ì”! Ì”# Ì!”% Ì#”” Ì{” Ì{
+” Ì{” Ì{–” Ì{” Ì{
+” Ì{” Ì{” Ì{” Ì{˜” Ì{” Ì{
+” Ì{ ” Ì{*” Ì{+”& Ì{5”' Ì{6”+ Ì{:–” Ì{” Ì{
+” Ì|	” Ì|” Ì|”$ Ì|š” Ì{” Ì{
+” Ì|” Ì|$” Ì|%” Ì|'”  Ì|-”" Ì|/”# Ì|0”% Ì|2’” Ì{” Ì{
+Ü ” Ì}” Ì}
+” Ì}” Ì}” Ì}”& Ì}”' Ì}”+ Ì}”, Ì}”1 Ì}$”2 Ì}%”6 Ì})”7 Ì}*”ÌD Ì}7”ÌE Ì}8”ÌF Ì}9–” Ì}” Ì}
+” Ì};” Ì}ÌC” Ì}ÌD” Ì}ÌF–” Ì}” Ì}
+” Ì~	” Ì~” Ì~”$ Ì~–” Ì}” Ì}
+” Ì~” Ì~(” Ì~)” Ì~+˜” Ì}” Ì}
+” Ì~-” Ì~6” Ì~7”$ Ì~Ì@”% Ì~ÌA”+ Ì~ÌG’” Ì}” Ì}
+’” Ìz” Ìz
+‘” Ì‚”” Ì„
+” Ì„” Ì„” Ì„"”” Ì…” Ì…
+” Ì…” Ì…’” Ì†”# Ì†’” Ì‡”' Ì‡!’” Ìˆ”# Ìˆ’” Ì‰”% Ì‰’”	 ÌŠ”
+ ÌŠÜ ” Ì‹” Ì‹
+” Ì‹” Ì‹” Ì‹” Ì‹” Ì‹” Ì‹”  Ì‹”& Ì‹"”) Ì‹%”* Ì‹&”+ Ì‹'”, Ì‹(”6 Ì‹2”7 Ì‹3”8 Ì‹4”9 Ì‹5”: Ì‹6”; Ì‹7”< Ì‹8”= Ì‹9”> Ì‹:”? Ì‹;”Ì@ Ì‹<”ÌC Ì‹?”ÌJ Ì‹ÌF”ÌK Ì‹ÌG”ÌQ Ì‹ÌM”ÌR Ì‹ÌN—” ÌŒ” ÌŒ” ÌŒ” ÌŒ” ÌŒ” ÌŒ” ÌŒ’” Ì” ÌÔrI–§version¤file§sources®sourcesContent¥names¨mappingsÀ‘À‘ÀÜ;‘”    ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”  	 ‘”  
+ ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”    ‘”  ! ‘”  " ‘”  # ‘”  $ ‘”  % ‘”  & ‘”  ' ‘”  ( ‘”  ) ‘”  * ‘”  + ‘”  , ‘”  - ‘”  . ‘”  / ‘”  0 ‘”  1 ‘”  2 ‘”  3 ‘”  4 ‘”  5 ‘”  6 ‘”  7 ‘”  8 ‘”  9 ‘”  : ‘”  ; ‘”  < ‘”  = ‘”  > ‘”  ? ‘”  Ì@ ‘”  ÌA ‘”  ÌB ‘”  ÌC ‘”  ÌD ‘”  ÌE ‘”  ÌF ‘”  ÌG ‘”  ÌH ‘”  ÌI ‘”  ÌJ ‘”  ÌK ‘”  ÌL ‘”  ÌM ‘”  ÌN ‘”  ÌO ‘”  ÌP ‘”  ÌQ ‘”  ÌR ‘”  ÌS ‘”  ÌT ‘”  ÌU ‘”  ÌV ‘”  ÌW ‘”  ÌX ‘”  ÌY ‘”  ÌZ ‘”  Ì[ ‘”  Ì\ ‘”  Ì] ‘”  Ì^ ‘”  Ì_ ‘”  Ì` ‘”  Ìa ‘”  Ìb ‘”  Ìc ‘”  Ìd ‘”  Ìe ‘”  Ìf ‘”  Ìg ‘”  Ìh ‘”  Ìi ‘”  Ìj ‘”  Ìk ‘”  Ìl ‘”  Ìm ‘”  Ìn ‘”  Ìo ‘”  Ìp ‘”  Ìq ‘”  Ìr ‘”  Ìs ‘”  Ìt ‘”  Ìu ‘”  Ìv ‘”  Ìw ‘”  Ìx ‘”  Ìy ‘”  Ìz ‘”  Ì{ ‘”  Ì| ‘”  Ì} ‘”  Ì~ ‘”  Ì ‘”  Ì€ ‘”  Ì ‘”  Ì‚ ‘”  Ìƒ ‘”  Ì„ ‘”  Ì… ‘”  Ì† ‘”  Ì‡ ‘”  Ìˆ ‘”  Ì‰ ‘”  ÌŠ ‘”  Ì‹ ‘”  ÌŒ ‘”  Ì ‘”  Ì ‘”  Ì ‘”  Ì ‘”  Ì‘ ‘”  Ì’ ‘”  Ì“ ‘”  Ì” ‘”  Ì• ‘”  Ì– ‘”  Ì— ‘”  Ì˜ ‘”  Ì™ ‘”  Ìš ‘”  Ì› ‘”  Ìœ ‘”  Ì ‘”  Ì ‘”  ÌŸ ‘”  Ì  ‘”  Ì¡ ‘”  Ì¢ ‘”  Ì£ ‘”  Ì¤ ‘”  Ì¥ ‘”  Ì¦ ‘”  Ì§ ‘”  Ì¨ ‘”  Ì© ‘”  Ìª ‘”  Ì« ‘”  Ì¬ ‘”  Ì­ ‘”  Ì® ‘”  Ì¯ ‘”  Ì° ‘”  Ì± ‘”  Ì² ‘”  Ì³ ‘”  Ì´ ‘”  Ìµ ‘”  Ì¶ ‘”  Ì· ‘”  Ì¸ ‘”  Ì¹ ‘”  Ìº ‘”  Ì» ‘”  Ì¼ ‘”  Ì½ ‘”  Ì¾ ‘”  Ì¿ ‘”  ÌÀ ‘”  ÌÁ ‘”  ÌÂ ‘”  ÌÃ ‘”  ÌÄ ‘”  ÌÅ ‘”  ÌÆ ‘”  ÌÇ ‘”  ÌÈ ‘”  ÌÉ ‘”  ÌÊ ‘”  ÌË ‘”  ÌÌ ‘”  ÌÍ ‘”  ÌÎ ‘”  ÌÏ ‘”  ÌĞ ‘”  ÌÑ ‘”  ÌÒ ‘”  ÌÓ ‘”  ÌÔ ‘”  ÌÕ ‘”  ÌÖ ‘”  Ì× ‘”  ÌØ ‘”  ÌÙ ‘”  ÌÚ ‘”  ÌÛ ‘”  ÌÜ ‘”  Ìİ ‘”  ÌŞ ‘”  Ìß ‘”  Ìà ‘”  Ìá ‘”  Ìâ ‘”  Ìã ‘”  Ìä ‘”  Ìå ‘”  Ìæ ‘”  Ìç ‘”  Ìè ‘”  Ìé ‘”  Ìê ‘”  Ìë ‘”  Ìì ‘”  Ìí ‘”  Ìî ‘”  Ìï ‘”  Ìğ ‘”  Ìñ ‘”  Ìò ‘”  Ìó ‘”  Ìô ‘”  Ìõ ‘”  Ìö ‘”  Ì÷ ‘”  Ìø ‘”  Ìù ‘”  Ìú ‘”  Ìû ‘”  Ìü ‘”  Ìı ‘”  Ìş ‘”  Ìÿ ‘”  Í  ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í	 ‘”  Í
+ ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í  ‘”  Í! ‘”  Í" ‘”  Í# ‘”  Í$ ‘”  Í% ‘”  Í& ‘”  Í' ‘”  Í( ‘”  Í) ‘”  Í* ‘”  Í+ ‘”  Í, ‘”  Í- ‘”  Í. ‘”  Í/ ‘”  Í0 ‘”  Í1 ‘”  Í2 ‘”  Í3 ‘”  Í4 ‘”  Í5 ‘”  Í6 ‘”  Í7 ‘”  Í8 ‘”  Í9 ‘”  Í: ÔrJ’§missing¦pluginÃ¦genAbcÂÔ  ÔrK”²dynamicImportCache¹exportAllDeclarationCache»exportNamedDeclarationCache«importCache’ÔrL•¤type¥start£endªspecifiers¦source±ImportDeclarationÌ€Ì¢‘ÔrM”¤type¥start£end¥local¶ImportDefaultSpecifierÌ‡ÌÔrN”¤type¥start£end¤nameªIdentifierÌ‡Ì¦routerÔrO•¤type¥start£end¥value£raw§LiteralÌ“Ì¡¬@ohos.router®"@ohos.router"L±ImportDeclarationÌ¤Ìä‘ÔrP•¤type¥start£end¨imported¥local¯ImportSpecifierÌ­Ì¼NªIdentifierÌ­Ì¼¯tarotControllerNªIdentifierÌ­Ì¼¯tarotControllerO§LiteralÌÄÌã½../controller/TarotController¿'../controller/TarotController'
